@@ -1,0 +1,77 @@
+{include="header"}
+
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h1>
+               <i class="fa fa-file-text" aria-hidden="true"></i>
+               Mis Pedidos
+               <span class="btn-group">
+                  <a class="btn btn-xs btn-default" href="{$fsc->url()}" title="Recargar la página">
+                     <span class="glyphicon glyphicon-refresh"></span>
+                  </a>
+                  {if="$fsc->page->is_default()"}
+                  <a class="btn btn-xs btn-default active" href="{$fsc->url()}&amp;default_page=FALSE" title="desmarcar como página de inicio">
+                     <span class="glyphicon glyphicon-home"></span>
+                  </a>
+                  {else}
+                  <a class="btn btn-xs btn-default" href="{$fsc->url()}&amp;default_page=TRUE" title="marcar como página de inicio">
+                     <span class="glyphicon glyphicon-home"></span>
+                  </a>
+                  <a class="btn btn-xs btn-default" href="/index.php?page=nueva_venta&tipo=pedido" title="Recargar la página">
+                     <span class="fa fa-shopping-cart"></span> Crear pedido
+                  </a>
+                  {/if}
+               </span>
+            </h1>
+            <p class="help-block">
+              Puede consultar todos los pedidos y el estado de los mismos
+            </p>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         <h4>
+            Estas son todas su facturas como cliente {$fsc->user->nick}
+         </h4>
+         <div class="table-responsive">
+            <table class="table table-hover">
+               <thead>
+                  <tr>
+                     <th>Numero</th>
+                     <th>CIF/NIF</th>
+                     <th>Fecha</th>
+                     <th>Importe neto</th>
+                     <th>Impuestos</th>
+                     <th>Importe con IVA</th>
+                     <th>Observaciones</th>
+                     <th>Método de Pago</th>
+                     <th>Enviado</th>
+                     <th style="text-align:center">Descargar</th>
+                  </tr>
+               </thead>
+               {loop="$fsc->resultados_sql"}
+               <tr {if condition="$value['pagada']==0"} class='bg-success'{else}class='bg-danger'{/if}>
+               {if condition="$value['codcliente']==$fsc->user->nick"}
+                  <td>{$value['codigo']}</td>
+                  <td>{$value['cifnif']}</td>
+                  <td>{$value['fecha']}</td>
+                  <td>{$value['neto']} {$value['coddivisa']}</td>
+                  <td>{$value['totaliva']} {$value['coddivisa']}</td>
+                  <td>{$value['total']} {$value['coddivisa']}</td>
+                  <td>{$value['observaciones']}</td>
+                  <td>{$value['codpago']}</td>
+                  <td style="text-align:center">{if condition="$value['status']==1"} <i class="fa fa-check" aria-hidden="true" style="color:darkgreen"></i> {else}<i class="fa fa-times" aria-hidden="true" style="color:red"></i>{/if}</td>
+                  <td style="text-align:center"><a target="_blank" href="/index.php?page=imprimir_presu_pedi&presupuesto=TRUE&id={$value['numero']}#"><i class="fa fa-download"  aria-hidden="true"></i></a></td>
+                  {/if}
+               </tr>
+               {/loop}
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+
+{include="footer"}

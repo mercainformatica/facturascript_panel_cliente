@@ -1,0 +1,81 @@
+{include="header"}
+
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-sm-12">
+         <div class="page-header">
+            <h1>
+               <i class="fa fa-file-text" aria-hidden="true"></i>
+               Mis solicitudes al SAT
+               <span class="btn-group">
+                  <a class="btn btn-xs btn-default" href="{$fsc->url()}" title="Recargar la página">
+                     <span class="glyphicon glyphicon-refresh"></span>
+                  </a>
+                  {if="$fsc->page->is_default()"}
+                  <a class="btn btn-xs btn-default active" href="{$fsc->url()}&amp;default_page=FALSE" title="desmarcar como página de inicio">
+                     <span class="glyphicon glyphicon-home"></span>
+                  </a>
+                  {else}
+                  <a class="btn btn-xs btn-default" href="{$fsc->url()}&amp;default_page=TRUE" title="marcar como página de inicio">
+                     <span class="glyphicon glyphicon-home"></span>
+                  </a>
+                  {/if}
+                  <a class="btn btn-xs btn-default" href="{$fsc->url()}&amp;default_page=TRUE" title="marcar como página de inicio">
+                     <span class="fa fa-exclamation-triangle"></span> Abrir nueva incidencia
+                  </a>
+               </span> 
+            </h1>
+            <p class="help-block">
+              Puede consultar y descargar todas sus facturas desde el área de cliente.
+            </p>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         <h4>
+            Estas son todas su facturas como cliente {$fsc->user->nick}
+         </h4>
+         <div class="table-responsive">
+            <table class="table table-hover">
+               <thead>
+                  <tr>
+                     <th>Numero</th>
+                     <th>Fecha</th>
+                     <th>Prioridad</th>
+                     <th>Indicaciones</th>
+                     <th>Solución</th>
+                     <th>Fecha Inicio</th>
+                     <th>Hora Inicio</th>
+                     <th>Fecha Fin</th>
+                     <th>Hora Fin</th>
+                     <th>Importe con IVA</th>
+                     <th style="text-align:center">Finalizada</th>
+                  </tr>
+               </thead>
+               {loop="$fsc->resultados_sql"}
+               <tr {if condition="$value['idestado']==100"} class='bg-success' {else}class='bg-danger'{/if}>
+               {if condition="$value['codcliente']==$fsc->user->nick"}
+                  <td>{$value['codigo']}</td>
+                  <td>{$value['fecha']}</td>
+                  <td>{if condition="$value['prioridad']==4"}<i class="fa fa-battery-quarter" aria-hidden="true"></i> Normal {elseif condition="$value['prioridad']==3"}<i class="fa fa-battery-half" aria-hidden="true"></i> Urgente{elseif condition="$value['prioridad']==2"}<i class="fa fa-battery-three-quarters" aria-hidden="true"></i> Muy Urgente{elseif condition="$value['prioridad']==1"}<i class="fa fa-battery-full" aria-hidden="true"></i> Crítico{/if}</td>
+                  <td>{$value['descripcion']}</td>
+                  <td>{$value['solucion']}</td>
+                  <td>{$value['fechainicio']}</td>
+                  <td>{$value['horainicio']}</td>
+                  <td>{$value['fechafin']}</td>
+                  <td>{$value['horafin']}</td>
+                  <td>{$value['total']} {$value['coddivisa']}</td>
+                  <td style="text-align:center">{if condition="$value['idestado']==100"} <i class="fa fa-check" aria-hidden="true" style="color:darkgreen"></i> {else}<i class="fa fa-times" aria-hidden="true" style="color:red"></i>{/if}</td>
+                  <td>{if condition="$value['idestado']==100"}{else}<span class="glyphicon glyphicon-edit"></span>{/if}</td>
+                  <td>{if condition="$value['idestado']==100"}<a target="_blank" href="/index.php?page=imprimir_servicio&id={$value['idservicio']}#"><i class="fa fa-download"  aria-hidden="true"></i></a>{else}<span class="glyphicon glyphicon-trash"></span>{/if}</td>
+                  {/if}
+               </tr>
+               {/loop}
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+
+{include="footer"}
